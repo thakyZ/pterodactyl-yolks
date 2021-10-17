@@ -8,7 +8,7 @@ export INTERNAL_IP=`ip route get 1 | awk '{print $NF;exit}'`
 python --version
 
 # Replace Startup Variables
-MODIFIED_STARTUP=$(echo "${STARTUP}" | sed -e 's/{{/${/g' -e 's/}}/}/g' | eval echo "$(cat -)")
+MODIFIED_STARTUP=$(echo "${STARTUP@Q}" | sed -e 's/{{/${/g' -e 's/}}/}/g' | eval echo "$(cat -)")
 echo -e ":/home/container$ ${MODIFIED_STARTUP}"
 
 # Run the startup command
