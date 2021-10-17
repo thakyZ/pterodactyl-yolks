@@ -1,4 +1,7 @@
 #!/bin/bash
+# Borrowed partially from:
+# https://github.com/matthewpi/images/blob/master/python/entrypoint.sh
+
 cd /home/container || exit 1
 
 # Make internal Docker IP address available to processes.
