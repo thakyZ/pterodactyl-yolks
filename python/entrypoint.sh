@@ -13,4 +13,4 @@ echo -e ":/home/container$ ${MODIFIED_STARTUP}"
 
 # Run the startup command
 # shellcheck disable=SC2086
-exec env ${PARSED}
+exec env ${MODIFIED_STARTUP}
