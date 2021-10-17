@@ -2,6 +2,7 @@
 # Borrowed partially from:
 # https://github.com/matthewpi/images/blob/master/python/entrypoint.sh
 
+
 cd /home/container || exit 1
 
 # Make internal Docker IP address available to processes.
@@ -10,10 +11,6 @@ export INTERNAL_IP
 
 # Print current Python version
 python --version
-
-# Replace variables in the startup command
-PARSED=$(echo "${STARTUP}" | sed -e 's/{{/${/g' -e 's/}}/}/g' | eval echo "$(cat -)")
-printf "\033[1m\033[33mcontainer@pterodactyl~ \033[0m%s\n" "$PARSED"
 
 # Replace Startup Variables
 MODIFIED_STARTUP=$(echo "${STARTUP}" | sed -e 's/{{/${/g' -e 's/}}/}/g' | eval echo "$(cat -)")
