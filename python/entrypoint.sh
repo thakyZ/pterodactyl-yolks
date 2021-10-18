@@ -17,6 +17,7 @@ MODIFIED_STARTUP=$(echo "${STARTUP}" | sed -e 's/{{/${/g' -e 's/}}/}/g' | eval e
 echo -e ":/home/container$ ${MODIFIED_STARTUP}"
 
 echo "${MODIFIED_STARTUP}" > /home/container/startup.sh
+chmod +x /home/container/startup.sh
 
 # Run the Server
 # shellcheck disable=SC2086
