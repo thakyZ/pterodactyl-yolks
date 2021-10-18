@@ -2,20 +2,25 @@
 # Borrowed partially from:
 # https://github.com/matthewpi/images/blob/master/python/entrypoint.sh
 
+# Default the TZ environment variable to UTC.
+TZ=${TZ:-UTC}
+export TZ
 
-cd /home/container || exit 1
-
-# Make internal Docker IP address available to processes.
+# Set environment variable that holds the Internal Docker IP
 INTERNAL_IP=$(ip route get 1 | awk '{print $NF;exit}')
 export INTERNAL_IP
 
-# Print current Python version
+# Switch to the container's working directory
+cd /home/container || exit 1
+
+# Print Python version
+printf "\033[1m\033[33mcontainer@pterodactyl~ \033[0mpython --version\n"
 python --version
 
-# Replace Startup Variables
-MODIFIED_STARTUP=$(echo "${STARTUP@Q}" | sed -e 's/{{/${/g' -e 's/}}/}/g' | eval echo "$(cat -)")
-echo -e ":/home/container$ ${MODIFIED_STARTUP}"
+# Replace variables in the startup command
+PARSED=$(echo "${STARTUP}" | sed -e 's/{{/${/g' -e 's/}}/}/g' | eval echo "$(cat -)")
+printf "\033[1m\033[33mcontainer@pterodactyl~ \033[0m%s\n" "$PARSED"
 
-# Run the Server
+# Run the startup command
 # shellcheck disable=SC2086
-exec env ${MODIFIED_STARTUP}
+exec env ${PARSED}
