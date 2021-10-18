@@ -16,6 +16,8 @@ python --version
 MODIFIED_STARTUP=$(echo "${STARTUP}" | sed -e 's/{{/${/g' -e 's/}}/}/g' | eval echo "$(cat -)")
 echo -e ":/home/container$ ${MODIFIED_STARTUP}"
 
+echo "${MODIFIED_STARTUP}" > /home/container/startup.sh
+
 # Run the Server
 # shellcheck disable=SC2086
-exec env ${MODIFIED_STARTUP}
+exec env /home/container/startup.sh
