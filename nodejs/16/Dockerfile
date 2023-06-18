@@ -8,7 +8,7 @@ RUN         apt update \
 
 RUN         npm install npm@latest -g \
             && npm install @pnpm/exe -g \
-            && pnpm setup
+            && /bin/bash -c "pnpm setup"
 
 USER        container
 ENV         USER=container HOME=/home/container
