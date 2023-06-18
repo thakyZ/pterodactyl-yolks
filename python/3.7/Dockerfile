@@ -1,6 +1,6 @@
-FROM        python:3.6-slim
+FROM        python:3.7-slim
 
-LABEL       author="Michael Parker" maintainer="parker@pterodactyl.io"
+LABEL       author="Michael Parker & Neko Boi Nick" maintainer="950594+thakyZ@users.noreply.github.com"
 
 RUN         apt update \
             && apt -y install git gcc g++ ca-certificates dnsutils curl iproute2 ffmpeg procps \
