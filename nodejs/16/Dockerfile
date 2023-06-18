@@ -6,9 +6,15 @@ RUN         apt update \
             && apt -y install ffmpeg iproute2 git sqlite3 libsqlite3-dev python3 python3-dev ca-certificates dnsutils tzdata zip tar curl build-essential libtool iputils-ping \
             && useradd -m -d /home/container container
 
+ENV         PNPM_HOME="/root/.local/share/pnpm"
+ENV         PATH="${PATH}:${PNPM_HOME}"
+
+SHELL       ["/bin/bash", "-c"]
+
 RUN         npm install npm@latest -g \
             && npm install @pnpm/exe -g \
-            && /bin/bash -c "pnpm setup"
+            && SHELL=bash pnpm setup \
+            && source /root/.bashrc
 
 USER        container
 ENV         USER=container HOME=/home/container
