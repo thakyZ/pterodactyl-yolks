@@ -1,4 +1,6 @@
 #!/bin/bash
+# Borrowed partially from:
+# https://github.com/parkervcp/yolks/blob/master/nodejs/entrypoint.sh
 cd /home/container
 
 # Make internal Docker IP address available to processes.
