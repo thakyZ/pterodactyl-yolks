@@ -1,4 +1,4 @@
-FROM        python:3.7-slim
+FROM        python:3.6-slim
 
 LABEL       author="Michael Parker & Neko Boi Nick" maintainer="950594+thakyZ@users.noreply.github.com"
 
