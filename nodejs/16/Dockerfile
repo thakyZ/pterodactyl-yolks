@@ -7,7 +7,7 @@ RUN         apt update \
             && useradd -m -d /home/container container
 
 RUN         npm install npm@latest -g \
-            && pnpm install @pnpm/exe -g
+            && npm install @pnpm/exe -g
 
 USER        container
 ENV         USER=container HOME=/home/container
