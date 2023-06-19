@@ -12,7 +12,7 @@ ENV         PATH="${PATH}:${PNPM_HOME}"
 SHELL       ["/bin/bash", "-c"]
 
 RUN         npm install npm@latest -g \
-            && npm install @pnpm/exe -g \
+            && curl -fsSL https://get.pnpm.io/install.sh | bash - \
             && SHELL=bash pnpm setup \
             && source /root/.bashrc
 
