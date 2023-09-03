@@ -55,3 +55,7 @@ is tagged correctly.
 
 * [`debian-install`](https://github.com/pterodactyl/yolks/tree/master/installers/debian)
   * `ghcr.io/pterodactyl/installers:debian`
+
+## Other Links
+
+[Pterodactyl Eggs](https://github.com/thakyZ/pterodactyl_eggs)
