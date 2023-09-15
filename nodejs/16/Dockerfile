@@ -12,7 +12,8 @@ ENV         PATH="${PATH}:${PNPM_HOME}"
 SHELL       ["/bin/bash", "-c"]
 
 RUN         npm install npm@8.19.4 -g \
-            && curl -fsSL https://get.pnpm.io/install.sh |  bash - \
+                                                           # PNPM_VERSION="8.7.5"
+			&& curl -fsSL https://get.pnpm.io/install.sh | bash - \
             && SHELL=bash pnpm setup \
             && source /root/.bashrc
 
