@@ -1,32 +1,21 @@
 #!/bin/bash
 # Wait for the container to fully initialize
 sleep 1
+# Switch to the container's working directory
+cd /home/container || exit 1
 
 # Default the TZ environment variable to UTC.
 TZ=${TZ:-UTC}
 export TZ
 
+# Information output
+echo "Running on Debian $(cat /etc/debian_version)"
+echo "Current timezone: $(cat /etc/timezone)"
+wine --version
+
 # Set environment variable that holds the Internal Docker IP
 INTERNAL_IP=$(ip route get 1 | awk '{print $(NF-2);exit}')
 export INTERNAL_IP
-
-# Set environment for Steam Proton
-if [[ -f "/usr/local/bin/proton" ]]; then
-    if [[ -n "${SRCDS_APPID}" ]]; then
-	    mkdir -p "/home/container/.steam/steam/steamapps/compatdata/${SRCDS_APPID}"
-        export STEAM_COMPAT_CLIENT_INSTALL_PATH="/home/container/.steam/steam"
-        export STEAM_COMPAT_DATA_PATH="/home/container/.steam/steam/steamapps/compatdata/${SRCDS_APPID}"
-    else
-        echo -e "----------------------------------------------------------------------------------"
-        echo -e "WARNING!!! Proton needs variable SRCDS_APPID, else it will not work. Please add it"
-        echo -e "Server stops now"
-        echo -e "----------------------------------------------------------------------------------"
-        exit 0
-    fi
-fi
-
-# Switch to the container's working directory
-cd /home/container || exit 1
 
 ## just in case someone removed the defaults.
 if [[ "${STEAM_USER}" == "" ]]; then
@@ -42,11 +31,11 @@ fi
 ## if auto_update is not set or to 1 update
 if [[ -z "${AUTO_UPDATE}" ]] || [[ "${AUTO_UPDATE}" == "1" ]]; then
     # Update Source Server
-    if [[ -n ${SRCDS_APPID} ]]; then
+    if [[ -n "${SRCDS_APPID}" ]]; then
 	    if [ "${STEAM_USER}" == "anonymous" ]; then
-            ./steamcmd/steamcmd.sh +force_install_dir /home/container +login "${STEAM_USER}" "${STEAM_PASS}" "${STEAM_AUTH}" "$( [[ "${WINDOWS_INSTALL}" == "1" ]] && printf %s '+@sSteamCmdForcePlatformType windows' )" +app_update "${SRCDS_APPID}" "$( [[ -z ${SRCDS_BETAID} ]] || printf %s "-beta ${SRCDS_BETAID}" )" "$( [[ -z ${SRCDS_BETAPASS} ]] || printf %s "-betapassword ${SRCDS_BETAPASS}" )" "$( [[ -z ${HLDS_GAME} ]] || printf %s "+app_set_config 90 mod ${HLDS_GAME}" )"  "${INSTALL_FLAGS} $( [[ "${VALIDATE}" == "1" ]] && printf %s 'validate' )" +quit
+            ./steamcmd/steamcmd.sh +force_install_dir /home/container +login ${STEAM_USER} ${STEAM_PASS} ${STEAM_AUTH} $( [[ "${WINDOWS_INSTALL}" == "1" ]] && printf %s '+@sSteamCmdForcePlatformType windows' ) +app_update ${SRCDS_APPID} $( [[ -z ${SRCDS_BETAID} ]] || printf %s "-beta ${SRCDS_BETAID}" ) $( [[ -z ${SRCDS_BETAPASS} ]] || printf %s "-betapassword ${SRCDS_BETAPASS}" ) $( [[ -z ${HLDS_GAME} ]] || printf %s "+app_set_config 90 mod ${HLDS_GAME}" ) $( [[ -z ${VALIDATE} ]] || printf %s "validate" ) +quit
 	    else
-            numactl --physcpubind=+0 ./steamcmd/steamcmd.sh +force_install_dir /home/container +login "${STEAM_USER}" "${STEAM_PASS}" "${STEAM_AUTH}" "$( [[ "${WINDOWS_INSTALL}" == "1" ]] && printf %s '+@sSteamCmdForcePlatformType windows' )" +app_update "${SRCDS_APPID}" "$( [[ -z ${SRCDS_BETAID} ]] || printf %s "-beta ${SRCDS_BETAID}" )" "$( [[ -z ${SRCDS_BETAPASS} ]] || printf %s "-betapassword ${SRCDS_BETAPASS}" )" "$( [[ -z ${HLDS_GAME} ]] || printf %s "+app_set_config 90 mod ${HLDS_GAME}" )" "${INSTALL_FLAGS}" "$( [[ "${VALIDATE}" == "1" ]] && printf %s 'validate' )" +quit
+            numactl --physcpubind=+0 ./steamcmd/steamcmd.sh +force_install_dir /home/container +login ${STEAM_USER} ${STEAM_PASS} ${STEAM_AUTH} $( [[ "${WINDOWS_INSTALL}" == "1" ]] && printf %s '+@sSteamCmdForcePlatformType windows' ) +app_update ${SRCDS_APPID} $( [[ -z ${SRCDS_BETAID} ]] || printf %s "-beta ${SRCDS_BETAID}" ) $( [[ -z ${SRCDS_BETAPASS} ]] || printf %s "-betapassword ${SRCDS_BETAPASS}" ) $( [[ -z ${HLDS_GAME} ]] || printf %s "+app_set_config 90 mod ${HLDS_GAME}" ) $( [[ -z ${VALIDATE} ]] || printf %s "validate" ) +quit
 	    fi
     else
         echo -e "No appid set. Starting Server"
@@ -55,6 +44,23 @@ if [[ -z "${AUTO_UPDATE}" ]] || [[ "${AUTO_UPDATE}" == "1" ]]; then
 else
     echo -e "Not updating game server as auto update was set to 0. Starting Server"
 fi
+
+if [[ "${XVFB}" == "1" ]]; then
+    Xvfb :0 -screen 0 "${DISPLAY_WIDTH}x${DISPLAY_HEIGHT}x${DISPLAY_DEPTH}" &
+fi
+
+# Install necessary to run packages
+echo "First launch will throw some errors. Ignore them"
+
+mkdir -p $WINEPREFIX
+
+WINETRICKS_RUN=("atmlib" "corefonts" "gdiplus" "msxml3" "msxml6" "vcrun2008" "vcrun2010" "vcrun2012" "fontsmooth-rgb" "gecko" "vcrun2022")
+
+# List and install other packages
+for trick in "${WINETRICKS_RUN[@]}"; do
+        echo "Installing ${trick}"
+        winetricks -q "${trick}"
+done
 
 # Replace Startup Variables
 MODIFIED_STARTUP=$(echo "${STARTUP}" | sed -e 's/{{/${/g' -e 's/}}/}/g')
