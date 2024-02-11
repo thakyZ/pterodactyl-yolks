@@ -10,6 +10,7 @@ on:
       - oses/debian/**
 jobs:
   push:
+    if: ${{ startsWith(github.event.head_commit.message, '[push]') || startsWith(github.event.head_commit.message, '[dev]') }}
     name: "debian:${{ matrix.distro }}"
     runs-on: ubuntu-latest
     strategy:
