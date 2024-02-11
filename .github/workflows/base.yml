@@ -10,6 +10,7 @@ on:
       - oses/**
 jobs:
   push:
+    if: ${{ startsWith(github.event.head_commit.message, '[push]') || startsWith(github.event.head_commit.message, '[dev]') }}
     name: "yolks:${{ matrix.oses }}"
     runs-on: ubuntu-latest
     strategy:
