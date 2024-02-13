@@ -19,7 +19,7 @@ jobs:
         shell: pwsh
         run: |
           $JsonText = '${{ toJSON(github) }}';
-          $Json = ($JsonTextZero | ConvertFrom-Json);
+          $Json = ($JsonText | ConvertFrom-Json);
           $JsonAny = $Json.event.commits;
           $JsonZero = $Json.event.commits[0];
           $JsonEvent = $Json.event_name;
