@@ -12,12 +12,8 @@ on:
       - .github/workflows/steamcmd.yml
 jobs:
   before_push:
-    name: "steamcmd:${{ matrix.distro }} before push"
+    name: "steamcmd before push"
     runs-on: ubuntu-latest
-    fail-fast: false
-    matrix:
-      distro:
-        - proton
     steps:
       - name: "test variables"
         shell: bash
