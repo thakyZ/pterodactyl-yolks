@@ -19,11 +19,11 @@ jobs:
         shell: bash
         run: |
           echo -e "A: github.event.commits[0]                                 = \"----\""
-          echo -e "B: github.event.commits[0].message                         = \"${{ toJSON(github.event.commits[0].message) }}\""
+          echo -e "B: github.event.commits[0].message[0]                      = \"${{ toJSON(github.event.commits[0].message[0]) }}\""
           echo -e "C: github.event.commits[0].message[0].startsWith('[push]') = \"${{ startsWith(toJSON(github.event.commits[0].message[0]), '[push]') }}\""
           echo -e "D: github.event.commits[0].message[0].startsWith('[dev]')  = \"${{ startsWith(toJSON(github.event.commits[0].message[0]), '[dev]') }}\""
           echo -e "E: github.event.commits.*                                  = \"----\""
-          echo -e "F: github.event.commits.*.message                          = \"${{ toJSON(github.event.commits.*.message) }}\""
+          echo -e "F: github.event.commits.*.message[0]                       = \"${{ toJSON(github.event.commits.*.message[0]) }}\""
           echo -e "G: github.event.commits.*.message[0].startsWith('[push]')  = \"${{ startsWith(toJSON(github.event.commits.*.message[0]), '[push]') }}\""
           echo -e "H: github.event.commits.*.message[0].startsWith('[dev]')   = \"${{ startsWith(toJSON(github.event.commits.*.message[0]), '[dev]') }}\""
           echo -e "I: github.event_name                                       = \"${{ github.event_name }}\""
