@@ -1,18 +1,58 @@
 #!/bin/bash
-# Switch to the container's working directory
-cd /home/container || exit 1
 
-# Information output
-echo "Running on Debian $(cat /etc/debian_version)"
-echo "Current timezone: $(cat /etc/timezone)"
-wine --version
+#
+# Copyright (c) 2021 Matthew Penner
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+#
+
+# Wait for the container to fully initialize
+sleep 1
+
+# Default the TZ environment variable to UTC.
+TZ=${TZ:-UTC}
+export TZ
 
 # Set environment variable that holds the Internal Docker IP
 INTERNAL_IP=$(ip route get 1 | awk '{print $(NF-2);exit}')
 export INTERNAL_IP
 
+# Set environment for Steam Proton
+if [ -f "/usr/local/bin/proton" ]; then
+    if [ -n "${SRCDS_APPID}" ]; then
+	    mkdir -p "/home/container/.steam/steam/steamapps/compatdata/${SRCDS_APPID}"
+        export STEAM_COMPAT_CLIENT_INSTALL_PATH="/home/container/.steam/steam"
+        export STEAM_COMPAT_DATA_PATH="/home/container/.steam/steam/steamapps/compatdata/${SRCDS_APPID}"
+    else
+        echo -e "----------------------------------------------------------------------------------"
+        echo -e "WARNING!!! Proton needs variable SRCDS_APPID, else it will not work. Please add it"
+        echo -e "Server stops now"
+        echo -e "----------------------------------------------------------------------------------"
+        exit 0
+    fi
+fi
+
+# Switch to the container's working directory
+cd /home/container || exit 1
+
 ## just in case someone removed the defaults.
-if [[ "${STEAM_USER}" == "" ]]; then
+if [ "${STEAM_USER}" == "" ]; then
     echo -e "steam user is not set.\n"
     echo -e "Using anonymous user.\n"
     STEAM_USER=anonymous
@@ -23,71 +63,43 @@ else
 fi
 
 ## if auto_update is not set or to 1 update
-if [[ -z "${AUTO_UPDATE}" ]] || [[ "${AUTO_UPDATE}" == "1" ]]; then
+if [ -z "${AUTO_UPDATE}" ] || [ "${AUTO_UPDATE}" == "1" ]; then
     # Update Source Server
-    if [[ -n "${SRCDS_APPID}" ]]; then
+    if [ -n "${SRCDS_APPID}" ]; then
+        SRCDS_BETAID_OPT=""
+        SRCDS_BETAPASS_OPT=""
+        HLDS_GAME_OPT=""
+        VALIDATE_OPT=""
+        if [ -n "${SRCDS_BETAID}" ]; then
+            SRCDS_BETAID_OPT="-beta ${SRCDS_BETAID}"
+        fi
+        if [ -n "${SRCDS_BETAPASS}" ]; then
+            SRCDS_BETAPASS_OPT="-betapassword ${SRCDS_BETAPASS}"
+        fi
+        if [ -n "${HLDS_GAME}" ]; then
+            HLDS_GAME_OPT="+app_set_config 90 mod ${HLDS_GAME}"
+        fi
+        if [ -n "${VALIDATE}" ]; then
+            VALIDATE_OPT="validate"
+        fi
+
 	    if [ "${STEAM_USER}" == "anonymous" ]; then
-        ./steamcmd/steamcmd.sh +force_install_dir "${STEAMCMD_INSTALLDIR:-/home/container}" +login ${STEAM_USER} ${STEAM_PASS} ${STEAM_AUTH} $( [[ "${WINDOWS_INSTALL}" == "1" ]] && printf %s '+@sSteamCmdForcePlatformType windows' ) +app_update ${SRCDS_APPID} $( [[ -z ${SRCDS_BETAID} ]] || printf %s "-beta ${SRCDS_BETAID}" ) $( [[ -z ${SRCDS_BETAPASS} ]] || printf %s "-betapassword ${SRCDS_BETAPASS}" ) $( [[ -z ${HLDS_GAME} ]] || printf %s "+app_set_config 90 mod ${HLDS_GAME}" ) $( [[ -z ${VALIDATE} ]] || printf %s "validate" ) +quit
+            steamcmd +@sSteamCmdForcePlatformType windows +force_install_dir "${STEAMCMD_INSTALLDIR:-/home/container}" +login "${STEAM_USER}" "${STEAM_PASS}" "${STEAM_AUTH}" +app_update "${SRCDS_APPID}" "${SRCDS_BETAID_OPT}" "${SRCDS_BETAPASS_OPT}" "${HLDS_GAME_OPT}" "${VALIDATE_OPT}" +quit
 	    else
-        numactl --physcpubind=+0 ./steamcmd/steamcmd.sh +force_install_dir "${STEAMCMD_INSTALLDIR:-/home/container}" +login ${STEAM_USER} ${STEAM_PASS} ${STEAM_AUTH} $( [[ "${WINDOWS_INSTALL}" == "1" ]] && printf %s '+@sSteamCmdForcePlatformType windows' ) +app_update ${SRCDS_APPID} $( [[ -z ${SRCDS_BETAID} ]] || printf %s "-beta ${SRCDS_BETAID}" ) $( [[ -z ${SRCDS_BETAPASS} ]] || printf %s "-betapassword ${SRCDS_BETAPASS}" ) $( [[ -z ${HLDS_GAME} ]] || printf %s "+app_set_config 90 mod ${HLDS_GAME}" ) $( [[ -z ${VALIDATE} ]] || printf %s "validate" ) +quit
+            numactl --physcpubind=+0 steamcmd +@sSteamCmdForcePlatformType windows +force_install_dir "${STEAMCMD_INSTALLDIR:-/home/container}" +login "${STEAM_USER}" "${STEAM_PASS}" "${STEAM_AUTH}" +app_update "${SRCDS_APPID}" "${SRCDS_BETAID_OPT}" "${SRCDS_BETAPASS_OPT}" "${HLDS_GAME_OPT}" "${VALIDATE_OPT}" +quit
 	    fi
     else
-    echo -e "No appid set. Starting Server"
+        echo -e "No appid set. Starting Server"
     fi
 
 else
     echo -e "Not updating game server as auto update was set to 0. Starting Server"
 fi
 
-if [[ "${XVFB}" == "1" ]]; then
-    Xvfb :0 -screen 0 "${DISPLAY_WIDTH}x${DISPLAY_HEIGHT}x${DISPLAY_DEPTH}" &
-fi
-
-# Install necessary to run packages
-echo "First launch will throw some errors. Ignore them"
-
-mkdir -p $WINEPREFIX
-
-# Check if wine-gecko required and install it if so
-if [[ $WINETRICKS_RUN =~ gecko ]]; then
-    echo "Installing Gecko"
-    WINETRICKS_RUN=${WINETRICKS_RUN/gecko}
-
-    if [ ! -f "$WINEPREFIX/gecko_x86.msi" ]; then
-        wget -q -O $WINEPREFIX/gecko_x86.msi http://dl.winehq.org/wine/wine-gecko/2.47.4/wine_gecko-2.47.4-x86.msi
-    fi
-
-    if [ ! -f "$WINEPREFIX/gecko_x86_64.msi" ]; then
-        wget -q -O $WINEPREFIX/gecko_x86_64.msi http://dl.winehq.org/wine/wine-gecko/2.47.4/wine_gecko-2.47.4-x86_64.msi
-    fi
-
-    wine msiexec /i $WINEPREFIX/gecko_x86.msi /qn /quiet /norestart /log $WINEPREFIX/gecko_x86_install.log
-    wine msiexec /i $WINEPREFIX/gecko_x86_64.msi /qn /quiet /norestart /log $WINEPREFIX/gecko_x86_64_install.log
-fi
-
-# Check if wine-mono required and install it if so
-if [[ $WINETRICKS_RUN =~ mono ]]; then
-    echo "Installing mono"
-    WINETRICKS_RUN=${WINETRICKS_RUN/mono}
-
-    if [ ! -f "$WINEPREFIX/mono.msi" ]; then
-        wget -q -O $WINEPREFIX/mono.msi https://dl.winehq.org/wine/wine-mono/8.0.0/wine-mono-8.0.0-x86.msi
-    fi
-
-    wine msiexec /i $WINEPREFIX/mono.msi /qn /quiet /norestart /log $WINEPREFIX/mono_install.log
-fi
-
-winetricks -q --self-update
-
-# List and install other packages
-for trick in $WINETRICKS_RUN; do
-	echo "Installing $trick"
-	winetricks -q $trick
-done
 
 # Replace Startup Variables
-MODIFIED_STARTUP=$(echo ${STARTUP} | sed -e 's/{{/${/g' -e 's/}}/}/g')
-echo ":/home/container$ ${MODIFIED_STARTUP}"
+MODIFIED_STARTUP=$(echo "${STARTUP}" | sed -e 's/{{/${/g' -e 's/}}/}/g')
+echo -e ":/home/container$ ${MODIFIED_STARTUP}"
 
 # Run the Server
-eval ${MODIFIED_STARTUP}
+eval "${MODIFIED_STARTUP}"
