@@ -4,8 +4,8 @@
 FROM        debian:bullseye-slim
 
 LABEL       author="Torsten Widmann" maintainer="info@goover.de" \
-			org.opencontainers.image.source = "https://github.com/thakyZ/pterodactyl_yolks" \
-			org.opencontainers.image.authors = "Neko Boi Nick <950594+thakyZ@users.noreply.github.com>, Natalie (https://github.com/CuteNatalie)" \
+			org.opencontainers.image.source="https://github.com/thakyZ/pterodactyl_yolks" \
+			org.opencontainers.image.authors="Neko Boi Nick <950594+thakyZ@users.noreply.github.com>, Natalie (https://github.com/CuteNatalie)" \
 			org.opencontainers.image.licenses=MIT
 
 ## install required packages
