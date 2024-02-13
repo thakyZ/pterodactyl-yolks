@@ -18,12 +18,24 @@ jobs:
       - name: "test variables"
         shell: pwsh
         run: |
-          $JsonTextZero = '${{ toJSON(github.event.commits) }}';
-          $JsonTextAny = '${{ toJSON(github.event.commits) }}';
-          $JsonZero = ($JsonTextZero | ConvertFrom-Json)
-          $JsonAny = ($JsonTextAny | ConvertFrom-Json)
-          Write-Output -InputObject $JsonZero | Out-Host;
-          Write-Output -InputObject $JsonAny | Out-Host;
+          $JsonText = '${{ toJSON(github) }}';
+          $Json = ($JsonTextZero | ConvertFrom-Json);
+          $JsonAny = $Json.event.commits;
+          $JsonZero = $Json.event.commits[0];
+          $JsonEvent = $Json.event_name;
+          $A = ($JsonZero.event.commits.message.StartsWith('[push]')); Write-Host "`$A    = $($A)";
+          $B = ($JsonZero.event.commits.message.StartsWith('[dev]'));  Write-Host "`$B    = $($B)";
+          $C = ($JsonAny.event.commits.message.StartsWith('[push]'));  Write-Host "`$C    = $($C)";
+          $D = ($JsonAny.event.commits.message.StartsWith('[dev]'));   Write-Host "`$D    = $($D)";
+
+          $E = ($JsonEvent -eq 'push');                                Write-Host "`$E    = $($E)";
+          $F = ($JsonEvent -eq 'workflow_dispatch');                   Write-Host "`$F    = $($F)";
+          $AB = ($A -or $B);                                           Write-Host "`$AB   = $($AB)";
+          $CD = ($C -or $D);                                           Write-Host "`$CD   = $($CD)";
+          $ABE = ($AB -and $E);                                        Write-Host "`$ABE  = $($ABE)";
+          $CDE = ($CD -and $E);                                        Write-Host "`$CDE  = $($CDE)";
+          $ABEF = ($ABE -or $F);                                       Write-Host "`$ABEF = $($ABEF)";
+          $CDEF = ($CDE -or $F);                                       Write-Host "`$CDEF = $($CDEF)";
   push:
     if: ${{ ( ( startsWith(toJSON(github.event.commits.*.message), '[push]') || startsWith(toJSON(github.event.commits.*.message), '[dev]') ) && github.event_name == 'push' ) || github.event_name == 'workflow_dispatch' }}
     name: "steamcmd:${{ matrix.distro }}"
