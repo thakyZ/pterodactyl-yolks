@@ -18,7 +18,7 @@ jobs:
       - name: "test variables"
         shell: pwsh
         run: |
-          $JsonText = '${{ toJSON(github) }}'; # Hamburger
+          $JsonText = '${{ toJSON(github) }}';
           $Json = ($JsonText | ConvertFrom-Json);
           $JsonAny = $Json.event.commits;
           $JsonZero = $Json.event.commits[0];
