@@ -18,8 +18,8 @@ jobs:
       - name: "test variables"
         shell: pwsh
         run: |
-          $JsonTextZero = "${{ toJSON(github.event.commits) }}";
-          $JsonTextAny = "${{ toJSON(github.event.commits) }}";
+          $JsonTextZero = '${{ toJSON(github.event.commits) }}';
+          $JsonTextAny = '${{ toJSON(github.event.commits) }}';
           $JsonZero = ($JsonTextZero | ConvertFrom-Json)
           $JsonAny = ($JsonTextAny | ConvertFrom-Json)
           Write-Output -InputObject $JsonZero | Out-Host;
