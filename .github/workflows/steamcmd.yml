@@ -25,6 +25,8 @@ jobs:
           $JsonEvent = $Json.event_name;
           $A = ($JsonZero.event.commits.message.StartsWith('[push]')); Write-Host "`$A    = $($A)";
           $B = ($JsonZero.event.commits.message.StartsWith('[dev]'));  Write-Host "`$B    = $($B)";
+          $L = ($JsonAny.event.commits.Length);                        Write-Host "`$L    = $($L)";
+          $LC = ($JsonAny.event.commits.Count);                        Write-Host "`$LC   = $($LC)";
           $C = ($JsonAny.event.commits.message.StartsWith('[push]'));  Write-Host "`$C    = $($C)";
           $D = ($JsonAny.event.commits.message.StartsWith('[dev]'));   Write-Host "`$D    = $($D)";
 
