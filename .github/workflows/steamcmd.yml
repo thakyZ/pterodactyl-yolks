@@ -10,7 +10,7 @@ on:
       - steamcmd/**
 jobs:
   push:
-    if: ${{ ( startsWith(toJSON(github.event.commits.*.message), '[push]') || startsWith(toJSON(github.event.commits.*.message), '[dev]') ) && github.event_name == 'push' }}
+    if: ${{ startsWith(toJSON(github.event.commits.*.message), '[push]') && github.event_name == 'push' }}
     name: "steamcmd:${{ matrix.distro }}"
     runs-on: ubuntu-latest
     strategy:
