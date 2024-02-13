@@ -10,7 +10,7 @@ on:
       - python/**
 jobs:
   push:
-    if: ${{ startsWith(github.event.head_commit.message, '[push]') || startsWith(github.event.head_commit.message, '[dev]') }}
+    if: ${{ ( ( startsWith(toJSON(github.event.commits.*.message), '[push]') || startsWith(toJSON(github.event.commits.*.message), '[dev]') ) && github.event_name == 'push' ) || github.event_name == 'workflow_dispatch' }}
     name: "yolks:python_${{ matrix.tag }}"
     runs-on: ubuntu-latest
     strategy:
@@ -21,7 +21,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       # Setup QEMU for ARM64 Build
-      - uses: docker/setup-qemu-action@v2          
+      - uses: docker/setup-qemu-action@v2
       - uses: docker/setup-buildx-action@v2
         with:
           buildkitd-flags: --debug

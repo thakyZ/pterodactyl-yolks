@@ -5,7 +5,7 @@ on:
     - cron: "0 0 1 * *"
   push:
     branches:
-      - master
+      - main
     paths:
       - installers/**
 
@@ -13,7 +13,7 @@ on:
 
 jobs:
   pushMultiArch:
-    if: ${{ startsWith(github.event.head_commit.message, '[push]') || startsWith(github.event.head_commit.message, '[dev]') }}
+    if: ${{ ( ( startsWith(toJSON(github.event.commits.*.message), '[push]') || startsWith(toJSON(github.event.commits.*.message), '[dev]') ) && github.event_name == 'push' ) || github.event_name == 'workflow_dispatch' }}
     name: "yolks:installers_multiarch:${{ matrix.tag }}"
     runs-on: ubuntu-latest
     strategy:

@@ -10,7 +10,7 @@ on:
       - nodejs/**
 jobs:
   push:
-    if: ${{ startsWith(github.event.head_commit.message, '[push]') || startsWith(github.event.head_commit.message, '[dev]') }}
+    if: ${{ ( ( startsWith(toJSON(github.event.commits.*.message), '[push]') || startsWith(toJSON(github.event.commits.*.message), '[dev]') ) && github.event_name == 'push' ) || github.event_name == 'workflow_dispatch' }}
     name: "yolks:nodejs_${{ matrix.tag }}"
     runs-on: ubuntu-latest
     strategy:
