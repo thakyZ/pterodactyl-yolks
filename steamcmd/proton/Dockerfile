@@ -4,9 +4,9 @@
 FROM        debian:bullseye-slim
 
 LABEL       author="Torsten Widmann" maintainer="info@goover.de" \
-			org.opencontainers.image.source="https://github.com/thakyZ/pterodactyl_yolks" \
-			org.opencontainers.image.authors="Neko Boi Nick <950594+thakyZ@users.noreply.github.com>, Natalie (https://github.com/CuteNatalie)" \
-			org.opencontainers.image.licenses=MIT
+            org.opencontainers.image.source="https://github.com/thakyZ/pterodactyl_yolks" \
+            org.opencontainers.image.authors="Neko Boi Nick <950594+thakyZ@users.noreply.github.com>, Natalie (https://github.com/CuteNatalie)" \
+            org.opencontainers.image.licenses=MIT
 
 ## install required packages
 RUN         dpkg --add-architecture i386
@@ -18,7 +18,7 @@ RUN         useradd -d /home/container -m container
 # Insert Steam prompt answers
 SHELL 		["/bin/bash", "-o", "pipefail", "-c"]
 RUN 		echo steam steam/question select "I AGREE" | debconf-set-selections \
- 			&& echo steam steam/license note '' | debconf-set-selections
+            && echo steam steam/license note '' | debconf-set-selections
 
 ## Download Steamcmd directly into the OS
 RUN 		apt-get update && apt-get install -y software-properties-common
@@ -59,7 +59,7 @@ USER        container
 ENV         USER=container HOME=/home/container
 WORKDIR     /home/container
 
-STOPSIGNAL SIGINT
+STOPSIGNAL  SIGINT
 
 COPY        --chown=container:container ./../entrypoint.sh /entrypoint.sh
 RUN         chmod +x /entrypoint.sh
