@@ -12,7 +12,7 @@ on:
       - .github/workflows/steamcmd.yml
 jobs:
   push:
-    if: ${{ ( ( startsWith(toJSON(github.event.commits[0].message), '[push]') || startsWith(toJSON(github.event.commits[0].message), '[dev]') ) && github.event_name == 'push' ) || github.event_name == 'workflow_dispatch' }}
+    if: ${{ ( ( startsWith(toJSON(github.event.commits[0].message), '"[push]') || startsWith(toJSON(github.event.commits[0].message), '"[dev]') ) && github.event_name == 'push' ) || github.event_name == 'workflow_dispatch' }}
     name: "steamcmd:${{ matrix.distro }}"
     runs-on: ubuntu-latest
     strategy:
