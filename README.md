@@ -27,34 +27,40 @@ is tagged correctly.
 
 ## Available Images
 
-* [`base oses`](https://github.com/thakyz/yolks/tree/main/oses)
-  * [`alpine`](https://github.com/thakyz/yolks/tree/main/oses/alpine)
+* [`base oses`](https://github.com/thakyz/pterodactyl_yolks/tree/main/oses)
+  * [`alpine`](https://github.com/thakyz/pterodactyl_yolks/tree/main/oses/alpine)
     * `ghcr.io/thakyz/yolks:alpine`
-  * [`debian`](https://github.com/thakyz/yolks/tree/main/oses/debian)
-    * `ghcr.io/thakyz/yolks:debian`
-* [`java`](https://github.com/thakyz/yolks/tree/main/java)
-  * [`java8`](https://github.com/thakyz/yolks/tree/main/java/8)
+  * [`debian`](https://github.com/thakyz/pterodactyl_yolks/tree/main/oses/debian)
+    * [`debian`](https://github.com/thakyz/pterodactyl_yolks/tree/main/oses/debian/bookworm-slim)
+      * `ghcr.io/thakyz/yolks:debian_bookworm-slim`
+    * [`debian`](https://github.com/thakyz/pterodactyl_yolks/tree/main/oses/debian/buster-slim)
+      * `ghcr.io/thakyz/yolks:debian_buster-slim`
+* [`java`](https://github.com/thakyz/pterodactyl_yolks/tree/main/java)
+  * [`java8`](https://github.com/thakyz/pterodactyl_yolks/tree/main/java/8)
     * `ghcr.io/thakyz/yolks:java_8`
-  * [`java11`](https://github.com/thakyz/yolks/tree/main/java/11)
+  * [`java11`](https://github.com/thakyz/pterodactyl_yolks/tree/main/java/11)
     * `ghcr.io/thakyz/yolks:java_11`
-  * [`java16`](https://github.com/thakyz/yolks/tree/main/java/16)
+  * [`java16`](https://github.com/thakyz/pterodactyl_yolks/tree/main/java/16)
     * `ghcr.io/thakyz/yolks:java_16`
-  * [`java17`](https://github.com/thakyz/yolks/tree/main/java/17)
+  * [`java17`](https://github.com/thakyz/pterodactyl_yolks/tree/main/java/17)
     * `ghcr.io/thakyz/yolks:java_17`
-* [`nodejs`](https://github.com/thakyz/yolks/tree/main/nodejs)
-  * [`node16`](https://github.com/thakyz/yolks/tree/main/nodejs/16)
+* [`nodejs`](https://github.com/thakyz/pterodactyl_yolks/tree/main/nodejs)
+  * [`node16`](https://github.com/thakyz/pterodactyl_yolks/tree/main/nodejs/16)
     * `ghcr.io/thakyz/yolks:nodejs_16`
-* [`python`](https://github.com/thakyz/yolks/tree/main/python)
-  * [`python3.7`](https://github.com/thakyz/yolks/tree/main/python/3.6)
+* [`python`](https://github.com/thakyz/pterodactyl_yolks/tree/main/python)
+  * [`python3.7`](https://github.com/thakyz/pterodactyl_yolks/tree/main/python/3.6)
     * `ghcr.io/thakyz/yolks:python_3.6`
+* [`steamcmd`](https://github.com/thakyz/pterodactyl_yolks/tree/main/steamcmd)
+  * [`proton`](https://github.com/thakyz/pterodactyl_yolks/tree/main/steamcmd/proton)
+    * `ghcr.io/thakyz/yolks:steamcmd_proton`
 
 ### Installation Images
 
-* [`alpine-install`](https://github.com/pterodactyl/yolks/tree/master/installers/alpine)
-  * `ghcr.io/pterodactyl/installers:alpine`
+* [`alpine-install`](https://github.com/thakyz/pterodactyl_yolks/tree/master/installers/alpine)
+  * `ghcr.io/thakyz/installers:alpine`
 
-* [`debian-install`](https://github.com/pterodactyl/yolks/tree/master/installers/debian)
-  * `ghcr.io/pterodactyl/installers:debian`
+* [`debian-install`](https://github.com/thakyz/pterodactyl_yolks/tree/master/installers/debian)
+  * `ghcr.io/thakyz/installers:debian`
 
 ## Other Links
 

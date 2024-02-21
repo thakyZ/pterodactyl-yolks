@@ -12,7 +12,7 @@ on:
       - .github/workflows/steamcmd.yml
 jobs:
   push:
-    if: ${{ ( ( startsWith(toJSON(github.event.commits[0].message), '"[push]') || startsWith(toJSON(github.event.commits[0].message), '"[dev]') ) && github.event_name == 'push' ) || github.event_name == 'workflow_dispatch' }}
+    if: "${{((startsWith(toJSON(github.event.head_commit.message), '[push]') || startsWith(toJSON(github.event.head_commit.message), '[dev]') ) && github.event_name == 'push' ) || github.event_name == 'workflow_dispatch'}}"
     name: "steamcmd:${{ matrix.distro }}"
     runs-on: ubuntu-latest
     strategy:
@@ -37,4 +37,4 @@ jobs:
           platforms: linux/amd64
           push: true
           tags: |
-            ghcr.io/thakyz/steamcmd:${{ matrix.distro }}
+            ghcr.io/thakyz/yolks:steamcmd_${{ matrix.distro }}
