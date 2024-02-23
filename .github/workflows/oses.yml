@@ -35,8 +35,7 @@ jobs:
           file: ./oses/${{ matrix.oses }}/Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: |
-            ghcr.io/thakyz/yolks:oses_${{ matrix.oses }}
+          tags: ghcr.io/thakyz/yolks:oses_${{ matrix.oses }}
   osses_debian:
     if: "${{((startsWith(toJSON(github.event.head_commit.message), '[push]') || startsWith(toJSON(github.event.head_commit.message), '[dev]') ) && github.event_name == 'push' ) || github.event_name == 'workflow_dispatch'}}"
     name: "yolks:${{ matrix.oses }}:${{ matrix.distro }}"
@@ -65,5 +64,4 @@ jobs:
           file: ./oses/${{ matrix.oses }}/${{ matrix.distro }}/Dockerfile
           platforms: linux/amd64
           push: true
-          tags: |
-            ghcr.io/thakyz/yolks:oses_${{ matrix.oses }}_${{ matrix.distro }}
+          tags: ghcr.io/thakyz/yolks:oses_${{ matrix.oses }}_${{ matrix.distro }}
