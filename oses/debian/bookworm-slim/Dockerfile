@@ -6,7 +6,7 @@ RUN         apt update -y \
             && apt install -y --no-install-recommends ca-certificates curl git unzip zip tar jq wget ca-certificates \
                                                       python3 python3-dev python3-yaml python3-requests python3-urllib3 \
                                                       ffmpeg iproute2 git sqlite3 libsqlite3-dev dnsutils tzdata build-essential \
-                                                      libtool iputils-ping libnss3 tini net-tools lsof \
+                                                      libtool iputils-ping libnss3 tini net-tools lsof nmap \
             && useradd -m -d /home/container container
 
 USER        container
