@@ -8,12 +8,13 @@ on:
       - main
     paths:
       - installers/**
+      - .github/workflows/installers.yml
 
 # Two separate jobs, first for multiarch (amd64, arm64), second for amd64 only
 
 jobs:
   pushMultiArch:
-    if: "${{((startsWith(toJSON(github.event.head_commit.message), '[push]') || startsWith(toJSON(github.event.head_commit.message), '[dev]') ) && github.event_name == 'push' ) || github.event_name == 'workflow_dispatch'}}"
+    if: "${{((startsWith(github.event.head_commit.message, '[push]') || startsWith(github.event.head_commit.message, '[dev]') ) && github.event_name == 'push' ) || github.event_name == 'workflow_dispatch'}}"
     name: "yolks:installers_multiarch:${{ matrix.tag }}"
     runs-on: ubuntu-latest
     strategy:
@@ -45,7 +46,7 @@ jobs:
             ghcr.io/thakyz/installers:${{ matrix.tag }}
 
   pushAmd:
-    if: "${{((startsWith(toJSON(github.event.head_commit.message), '[push]') || startsWith(toJSON(github.event.head_commit.message), '[dev]') ) && github.event_name == 'push' ) || github.event_name == 'workflow_dispatch'}}"
+    if: "${{((startsWith(github.event.head_commit.message, '[push]') || startsWith(github.event.head_commit.message, '[dev]') ) && github.event_name == 'push' ) || github.event_name == 'workflow_dispatch'}}"
     name: "yolks:installers_amd:${{ matrix.tag }}"
     runs-on: ubuntu-latest
     strategy:

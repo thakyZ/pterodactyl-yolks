@@ -8,9 +8,10 @@ on:
       - main
     paths:
       - java/**
+      - .github/workflows/java.yml
 jobs:
   push:
-    if: "${{((startsWith(toJSON(github.event.head_commit.message), '[push]') || startsWith(toJSON(github.event.head_commit.message), '[dev]') ) && github.event_name == 'push' ) || github.event_name == 'workflow_dispatch'}}"
+    if: "${{((startsWith(github.event.head_commit.message, '[push]') || startsWith(github.event.head_commit.message, '[dev]') ) && github.event_name == 'push' ) || github.event_name == 'workflow_dispatch'}}"
     name: "yolks:java_${{ matrix.tag }}"
     runs-on: ubuntu-latest
     strategy:

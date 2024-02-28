@@ -10,24 +10,6 @@ on:
       - oses/**
       - .github/workflows/oses.yml
 jobs:
-  debug:
-    name: "debugging"
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        oses:
-          - alpine
-          - debian
-    steps:
-      - shell: pwsh
-        run: |
-          Write-Host -Object "github.event.head_commit.message                               = ${{ github.event.head_commit.message }}"
-          Write-Host -Object "toJSON(github.event.head_commit.message)                       = ${{ toJSON(github.event.head_commit.message) }}"
-          Write-Host -Object "startsWith(toJSON(github.event.head_commit.message), '[push]') = ${{ startsWith(toJSON(github.event.head_commit.message), '[push]') }}"
-          Write-Host -Object "startsWith(toJSON(github.event.head_commit.message), '[dev]')  = ${{ startsWith(toJSON(github.event.head_commit.message), '[dev]') }}"
-          Write-Host -Object "startsWith(github.event.head_commit.message, '[push]')         = ${{ startsWith(github.event.head_commit.message, '[push]') }}"
-          Write-Host -Object "startsWith(github.event.head_commit.message, '[dev]')          = ${{ startsWith(github.event.head_commit.message, '[dev]') }}"
-          Write-Host -Object "matrix.oses                                                    = ${{ matrix.oses }}"
   osses:
     if: "${{((startsWith(github.event.head_commit.message, '[push]') || startsWith(github.event.head_commit.message, '[dev]')) && github.event_name == 'push' ) || github.event_name == 'workflow_dispatch'}}"
     name: "yolks:${{ matrix.oses }}"
@@ -56,7 +38,7 @@ jobs:
           push: true
           tags: ghcr.io/thakyz/yolks:oses_${{ matrix.oses }}
   osses_debian:
-    if: "${{((startsWith(toJSON(github.event.head_commit.message), '[push]') || startsWith(toJSON(github.event.head_commit.message), '[dev]') ) && github.event_name == 'push' ) || github.event_name == 'workflow_dispatch'}}"
+    if: "${{((startsWith(github.event.head_commit.message, '[push]') || startsWith(github.event.head_commit.message, '[dev]') ) && github.event_name == 'push' ) || github.event_name == 'workflow_dispatch'}}"
     name: "yolks:${{ matrix.oses }}:${{ matrix.distro }}"
     runs-on: ubuntu-latest
     strategy:
