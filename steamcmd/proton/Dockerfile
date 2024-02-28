@@ -11,7 +11,7 @@ LABEL       author="Torsten Widmann" maintainer="info@goover.de" \
 ## install required packages
 RUN         dpkg --add-architecture i386
 RUN         apt update
-RUN         apt install -y --no-install-recommends wget unzip iproute2 gnupg2 software-properties-common libntlm0 winbind xvfb xauth libncurses5-dev:i386 libncurses6 dbus libgdiplus lib32gcc-s1 moreutils net-tools procps
+RUN         apt install -y --no-install-recommends wget unzip iproute2 gnupg2 software-properties-common libntlm0 winbind xvfb xauth libncurses5-dev:i386 libncurses6 dbus libgdiplus lib32gcc-s1 moreutils net-tools lsof nmap  procps
 RUN         apt install -y alsa-tools libpulse0 pulseaudio libpulse-dev libasound2 libao-common gnutls-bin gnupg locales numactl cabextract curl python3 python3-pip python3-yaml python3-setuptools tini file
 RUN         useradd -d /home/container -m container
 
