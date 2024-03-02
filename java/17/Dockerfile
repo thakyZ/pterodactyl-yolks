@@ -24,14 +24,29 @@ FROM        --platform=$TARGETOS/$TARGETARCH eclipse-temurin:17-jdk-jammy
 
 LABEL       author="Matthew Penner" maintainer="matthew@pterodactyl.io"
 
-LABEL       org.opencontainers.image.source="https://github.com/pterodactyl/yolks"
+LABEL       org.opencontainers.image.source="https://github.com/thakyZ/pterodactyl_yolks"
 LABEL       org.opencontainers.image.licenses=MIT
 
 # Altered to additionall install 'gettext'
-RUN 		apt-get update -y \
- 			&& apt-get install -y lsof curl ca-certificates openssl git tar sqlite3 fontconfig libfreetype6 tzdata iproute2 libstdc++6 \
-      && apt-get install -y gettext \
- 			&& useradd -d /home/container -m container
+RUN         apt-get update -y \
+            && apt-get install -y lsof curl ca-certificates openssl git tar sqlite3 fontconfig libfreetype6 tzdata iproute2 libstdc++6 \
+            && apt-get install -y gettext \
+            && useradd -d /home/container -m container
+
+WORKDIR     /tmp/
+RUN         mkdir /tmp/ssl
+RUN         curl -sSL -o /tmp/ssl/isrgrootx1.crt https://letsencrypt.org/certs/isrgrootx1.der \
+            && echo $(cat /tmp/ssl/isrgrootx1.crt) >> /etc/ssl/certs/ca-certificates.crt \
+            && rm /tmp/ssl/isrgrootx1.crt
+RUN         curl -sSL -o /tmp/ssl/isrg-root-x2.crt https://letsencrypt.org/certs/isrg-root-x2.der \
+            && echo $(cat /tmp/ssl/isrg-root-x2.crt) >> /etc/ssl/certs/ca-certificates.crt \
+            && rm /tmp/ssl/isrg-root-x2.crt
+RUN         curl -sSL -o /tmp/ssl/lets-encrypt-r3.crt https://letsencrypt.org/certs/lets-encrypt-r3.der \
+            && echo $(cat /tmp/ssl/lets-encrypt-r3.crt) >> /etc/ssl/certs/ca-certificates.crt \
+            && rm /tmp/ssl/lets-encrypt-r3.crt
+RUN         update-ca-certificates \
+            && rm -r /tmp/ssl
+
 
 USER        container
 ENV         USER=container HOME=/home/container
