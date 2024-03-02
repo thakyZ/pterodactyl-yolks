@@ -34,8 +34,8 @@ RUN 		apt-get update -y \
 RUN         update-ca-certificates \
             && curl -sSL -o /usr/local/share/ca-certificates/extra/isrgrootx1.pem https://letsencrypt.org/certs/isrgrootx1.pem \
             && curl -sSL -o /usr/local/share/ca-certificates/extra/isrg-root-x2.pem https://letsencrypt.org/certs/isrg-root-x2.pem \
-			&& curl -sSL -o /usr/local/share/ca-certificates/extra/lets-encrypt-r3.pem https://letsencrypt.org/certs/lets-encrypt-r3.pem \
-			&& curl -sSL -o /usr/local/share/ca-certificates/extra/lets-encrypt-r3.pem https://letsencrypt.org/certs/lets-encrypt-r3.pem \
+            && curl -sSL -o /usr/local/share/ca-certificates/extra/lets-encrypt-r3.pem https://letsencrypt.org/certs/lets-encrypt-r3.pem \
+            && curl -sSL -o /usr/local/share/ca-certificates/extra/lets-encrypt-r3.pem https://letsencrypt.org/certs/lets-encrypt-r3.pem \
             && rm /usr/share/ca-certificates/mozilla/DST_Root_CA_X3.crt
 
 USER        container
