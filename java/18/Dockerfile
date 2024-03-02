@@ -37,7 +37,7 @@ RUN         mkdir  /usr/local/share/ca-certificates/extra/ \
             && curl -sSL -o /usr/local/share/ca-certificates/extra/lets-encrypt-r3.pem https://letsencrypt.org/certs/lets-encrypt-r3.pem \
             && curl -sSL -o /usr/local/share/ca-certificates/extra/lets-encrypt-r3.pem https://letsencrypt.org/certs/lets-encrypt-r3.pem \
             && rm /usr/share/ca-certificates/mozilla/DST_Root_CA_X3.crt \
-			update-ca-certificates
+            && update-ca-certificates
 
 USER        container
 ENV         USER=container HOME=/home/container
