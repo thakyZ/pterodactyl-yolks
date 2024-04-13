@@ -11,12 +11,12 @@ LABEL       author="Torsten Widmann" maintainer="info@goover.de" \
 ## install required packages
 RUN         dpkg --add-architecture i386
 RUN         apt update -y
-RUN         apt install -y --no-install-recommends wget unzip iproute2 gnupg2 software-properties-common libntlm0 \
-                                                   winbind xvfb xauth libncurses5-dev:i386 libncurses6 dbus libgdiplus \
-                                                   lib32gcc-s1 moreutils procps
+RUN         apt install -y --no-install-recommends wget iproute2 gnupg2 software-properties-common libntlm0 winbind \
+                                                   xvfb xauth libncurses5-dev:i386 libncurses6 dbus libgdiplus \
+                                                   lib32gcc-s1
 RUN         apt install -y alsa-tools libpulse0 pulseaudio libpulse-dev libasound2 libao-common gnutls-bin gnupg \
-                           locales numactl cabextract curl python3 python3-pip python3-yaml python3-setuptools tini \
-                           file
+                           locales numactl cabextract curl python3 python3-pip python3-setuptools python3-yaml \
+                           python3-setuptools tini file pipx moreutils procps unzip
 RUN         useradd -m -d /home/container -m container
 
 ## Install packages used for debugging.
@@ -41,10 +41,8 @@ RUN         ln -s /usr/games/steamcmd /usr/bin/steamcmd
 RUN         curl -sLOJ "$(curl -s https://api.github.com/repos/GloriousEggroll/proton-ge-custom/releases/latest | grep browser_download_url | cut -d\" -f4 | egrep .tar.gz)"
 RUN         tar -xzf GE-Proton*.tar.gz -C /usr/local/bin/ --strip-components=1
 RUN         rm GE-Proton*.*
-RUN         mkdir -p /home/container/.steam/steam/steamapps/compatdata/2394010/
-RUN         cp -a /usr/local/bin/files/share/default_pfx /home/container/.steam/steam/steamapps/compatdata/2394010/
-
-RUN         echo -e "pwd = $(pwd)"
+#RUN         mkdir -p /home/container/.steam/steam/steamapps/compatdata/2394010/
+#RUN         cp -a /usr/local/bin/files/share/default_pfx /home/container/.steam/steam/steamapps/compatdata/2394010/
 
 # Proton Fix machine-id
 RUN         rm -f /etc/machine-id
@@ -53,10 +51,10 @@ RUN         rm /var/lib/dbus/machine-id
 RUN         dbus-uuidgen --ensure
 
 #Setup Protontricks
-RUN         python3 -m pip install protontricks
+RUN         pipx install protontricks
 
 # Set up Winetricks
-RUN         curl -sSL -o /usr/sbin/winetricks https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks
+RUN         curl -q -O /usr/sbin/winetricks https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks
 RUN         chmod +x /usr/sbin/winetricks
 
 ## install rcon
