@@ -54,8 +54,8 @@ RUN         dbus-uuidgen --ensure
 RUN         pipx install protontricks
 
 # Set up Winetricks
-RUN         curl -q -O /usr/sbin/winetricks https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks
-RUN         chmod +x /usr/sbin/winetricks
+RUN	        wget -q -O /usr/sbin/winetricks https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks \
+            && chmod +x /usr/sbin/winetricks
 
 ## install rcon
 WORKDIR     /tmp/
