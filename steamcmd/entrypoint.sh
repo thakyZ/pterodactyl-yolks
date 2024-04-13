@@ -39,6 +39,8 @@ if [ -f "/usr/local/bin/proton" ]; then
 	    mkdir -p "/home/container/.steam/steam/steamapps/compatdata/${SRCDS_APPID}"
         export STEAM_COMPAT_CLIENT_INSTALL_PATH="/home/container/.steam/steam"
         export STEAM_COMPAT_DATA_PATH="/home/container/.steam/steam/steamapps/compatdata/${SRCDS_APPID}"
+		# Fix for pipx with protontricks
+        export PATH=$PATH:/root/.local/bin
     else
         echo -e "----------------------------------------------------------------------------------"
         echo -e "WARNING!!! Proton needs variable SRCDS_APPID, else it will not work. Please add it"
@@ -86,7 +88,7 @@ if [ -z "${AUTO_UPDATE}" ] || [ "${AUTO_UPDATE}" == "1" ]; then
         fi
 
 	    if [ "${STEAM_USER}" == "anonymous" ]; then
-            steamcmd +@sSteamCmdForcePlatformType windows +force_install_dir "${STEAMCMD_INSTALLDIR:-/home/container}" +login "${STEAM_LOGIN}" +app_update "${SRCDS_APPID}" "${SRCDS_BETAID_OPT}" "${SRCDS_BETAPASS_OPT}" "${HLDS_GAME_OPT}" "${VALIDATE_OPT}" +quit
+            ./steamcmd/steamcmd.sh +@sSteamCmdForcePlatformType windows +force_install_dir "${STEAMCMD_INSTALLDIR:-/home/container}" +login "${STEAM_LOGIN}" +app_update "${SRCDS_APPID}" "${SRCDS_BETAID_OPT}" "${SRCDS_BETAPASS_OPT}" "${HLDS_GAME_OPT}" "${VALIDATE_OPT}" +quit
 	    else
             numactl --physcpubind=+0 steamcmd +@sSteamCmdForcePlatformType windows +force_install_dir "${STEAMCMD_INSTALLDIR:-/home/container}" +login "${STEAM_LOGIN}" +app_update "${SRCDS_APPID}" "${SRCDS_BETAID_OPT}" "${SRCDS_BETAPASS_OPT}" "${HLDS_GAME_OPT}" "${VALIDATE_OPT}" +quit
 	    fi
