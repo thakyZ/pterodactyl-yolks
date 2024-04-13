@@ -22,20 +22,20 @@ RUN         useradd -m -d /home/container -m container
 ## Install packages used for debugging.
 RUN         apt install -y --no-install-recommends net-tools lsof nmap
 
-# Insert Steam prompt answers
-SHELL       ["/bin/bash", "-o", "pipefail", "-c"]
-RUN         echo steam steam/question select "I AGREE" | debconf-set-selections \
-            && echo steam steam/license note '' | debconf-set-selections
+## Insert Steam prompt answers
+#SHELL       ["/bin/bash", "-o", "pipefail", "-c"]
+#RUN         echo steam steam/question select "I AGREE" | debconf-set-selections \
+#            && echo steam steam/license note '' | debconf-set-selections
 
-## Download Steamcmd directly into the OS
-RUN         apt update -y
-RUN         apt install -y software-properties-common
-RUN         apt-add-repository non-free
-RUN         apt update
-RUN         apt install -y steamcmd
+### Download Steamcmd directly into the OS
+#RUN         apt update -y
+#RUN         apt install -y software-properties-common
+#RUN         apt-add-repository non-free
+#RUN         apt update
+#RUN         apt install -y steamcmd
 
-# Create symlink for executable
-RUN         ln -s /usr/games/steamcmd /usr/bin/steamcmd
+## Create symlink for executable
+#RUN         ln -s /usr/games/steamcmd /usr/bin/steamcmd
 
 # Download Proton GE
 RUN         curl -sLOJ "$(curl -s https://api.github.com/repos/GloriousEggroll/proton-ge-custom/releases/latest | grep browser_download_url | cut -d\" -f4 | egrep .tar.gz)"
