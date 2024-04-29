@@ -71,10 +71,11 @@ if [ -z "${AUTO_UPDATE}" ] || [ "${AUTO_UPDATE}" == "1" ]; then
     # Update Source Server
     if [ -n "${SRCDS_APPID}" ]; then
 		cmd="+@sSteamCmdForcePlatformType windows"
-		if [ "${STEAMCMD_INSTALLDIR:-/home/container}" == "/mnt/server*" ]; then
-			STEAMCMD_INSTALLDIR=$(echo "${STEAMCMD_INSTALLDIR}" | sed -E 's;/mnt/server;/home/container;')
+		STEAMCMD_INSTALLDIR_LCL="${STEAMCMD_INSTALLDIR:-/home/container}"
+		if [ "${STEAMCMD_INSTALLDIR_LCL:-/home/container}" == "/mnt/server*" ]; then
+			STEAMCMD_INSTALLDIR_LCL=$(echo "${STEAMCMD_INSTALLDIR}" | sed -E 's;/mnt/server;/home/container;')
 		fi
-		cmd="+force_install_dir ${STEAMCMD_INSTALLDIR} +login ${STEAM_LOGIN} +app_update ${SRCDS_APPID}"
+		cmd="+force_install_dir ${STEAMCMD_INSTALLDIR_LCL} +login ${STEAM_LOGIN} +app_update ${SRCDS_APPID}"
         if [ -n "${SRCDS_BETAID}" ]; then
 			cmd="${cmd} -beta ${SRCDS_BETAID}"
         fi
