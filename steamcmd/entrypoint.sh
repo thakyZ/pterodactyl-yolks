@@ -70,32 +70,36 @@ fi
 if [ -z "${AUTO_UPDATE}" ] || [ "${AUTO_UPDATE}" == "1" ]; then
     # Update Source Server
     if [ -n "${SRCDS_APPID}" ]; then
-        SRCDS_BETAID_OPT=""
-        SRCDS_BETAPASS_OPT=""
-        HLDS_GAME_OPT=""
-        VALIDATE_OPT=""
-        if [ -n "${SRCDS_BETAID}" ]; then
-            SRCDS_BETAID_OPT="-beta ${SRCDS_BETAID}"
-        fi
-        if [ -n "${SRCDS_BETAPASS}" ]; then
-            SRCDS_BETAPASS_OPT="-betapassword ${SRCDS_BETAPASS}"
-        fi
-        if [ -n "${HLDS_GAME}" ]; then
-            HLDS_GAME_OPT="+app_set_config 90 mod ${HLDS_GAME}"
-        fi
-        if [ -n "${VALIDATE}" ]; then
-            VALIDATE_OPT="validate"
-        fi
+		cmd="+@sSteamCmdForcePlatformType windows"
 		if [ "${STEAMCMD_INSTALLDIR:-/home/container}" == "/mnt/server*" ]; then
 			STEAMCMD_INSTALLDIR=$(echo "${STEAMCMD_INSTALLDIR}" | sed -E 's;/mnt/server;/home/container;')
 		fi
+		cmd="+force_install_dir ${STEAMCMD_INSTALLDIR} +login ${STEAM_LOGIN} +app_update ${SRCDS_APPID}"
+        if [ -n "${SRCDS_BETAID}" ]; then
+			cmd="${cmd} -beta ${SRCDS_BETAID}"
+        fi
+        if [ -n "${SRCDS_BETAPASS}" ]; then
+			cmd="${cmd} -betapassword ${SRCDS_BETAPASS}"
+        fi
+        if [ -n "${HLDS_GAME}" ]; then
+			cmd="${cmd} +app_set_config 90 mod ${HLDS_GAME}"
+        fi
+        if [ -n "${VALIDATE}" ]; then
+			cmd="${cmd} validate"
+        fi
+		cmd="${cmd} +quit"
+
 
 	    if [ "${STEAM_USER}" == "anonymous" ]; then
+			cmd="./steamcmd/steamcmd.sh ${cmd}"
 			echo "Running SteamCMD:"
-			echo "./steamcmd/steamcmd.sh +@sSteamCmdForcePlatformType windows +force_install_dir \"\" +login \"${STEAM_LOGIN}\" +app_update \"${SRCDS_APPID}\" \"${SRCDS_BETAID_OPT}\" \"${SRCDS_BETAPASS_OPT}\" \"${HLDS_GAME_OPT}\" \"${VALIDATE_OPT}\" +quit"
-            ./steamcmd/steamcmd.sh +@sSteamCmdForcePlatformType windows +force_install_dir "${STEAMCMD_INSTALLDIR:-/home/container}" +login "${STEAM_LOGIN}" +app_update "${SRCDS_APPID}" "${SRCDS_BETAID_OPT}" "${SRCDS_BETAPASS_OPT}" "${HLDS_GAME_OPT}" "${VALIDATE_OPT}" +quit
+			echo "${cmd}"
+            eval "${cmd}"
 	    else
-            numactl --physcpubind=+0 steamcmd +@sSteamCmdForcePlatformType windows +force_install_dir "${STEAMCMD_INSTALLDIR:-/home/container}" +login "${STEAM_LOGIN}" +app_update "${SRCDS_APPID}" "${SRCDS_BETAID_OPT}" "${SRCDS_BETAPASS_OPT}" "${HLDS_GAME_OPT}" "${VALIDATE_OPT}" +quit
+			cmd="numactl --physcpubind=+0 steamcmd ${cmd}"
+			echo "Running SteamCMD:"
+			echo "${cmd}"
+            eval "${cmd}"
 	    fi
     else
         echo -e "No appid set. Starting Server"
