@@ -88,6 +88,8 @@ if [ -z "${AUTO_UPDATE}" ] || [ "${AUTO_UPDATE}" == "1" ]; then
         fi
 
 	    if [ "${STEAM_USER}" == "anonymous" ]; then
+			echo "Running SteamCMD:"
+			echo "./steamcmd/steamcmd.sh +@sSteamCmdForcePlatformType windows +force_install_dir \"${STEAMCMD_INSTALLDIR:-/home/container}\" +login \"${STEAM_LOGIN}\" +app_update \"${SRCDS_APPID}\" \"${SRCDS_BETAID_OPT}\" \"${SRCDS_BETAPASS_OPT}\" \"${HLDS_GAME_OPT}\" \"${VALIDATE_OPT}\" +quit"
             ./steamcmd/steamcmd.sh +@sSteamCmdForcePlatformType windows +force_install_dir "${STEAMCMD_INSTALLDIR:-/home/container}" +login "${STEAM_LOGIN}" +app_update "${SRCDS_APPID}" "${SRCDS_BETAID_OPT}" "${SRCDS_BETAPASS_OPT}" "${HLDS_GAME_OPT}" "${VALIDATE_OPT}" +quit
 	    else
             numactl --physcpubind=+0 steamcmd +@sSteamCmdForcePlatformType windows +force_install_dir "${STEAMCMD_INSTALLDIR:-/home/container}" +login "${STEAM_LOGIN}" +app_update "${SRCDS_APPID}" "${SRCDS_BETAID_OPT}" "${SRCDS_BETAPASS_OPT}" "${HLDS_GAME_OPT}" "${VALIDATE_OPT}" +quit
