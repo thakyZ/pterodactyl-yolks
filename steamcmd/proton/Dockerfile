@@ -10,14 +10,10 @@ LABEL       author="Torsten Widmann" maintainer="info@goover.de" \
 
 ## install required packages
 RUN         dpkg --add-architecture i386
-RUN         apt update -y
-RUN         apt install -y --no-install-recommends wget iproute2 gnupg2 software-properties-common libntlm0 winbind \
-                                                   xvfb xauth libncurses5-dev:i386 libncurses6 dbus libgdiplus \
-                                                   lib32gcc-s1
-RUN         apt install -y alsa-tools libpulse0 pulseaudio libpulse-dev libasound2 libao-common gnutls-bin gnupg \
-                           locales numactl cabextract curl python3 python3-pip python3-setuptools python3-yaml \
-                           python3-setuptools tini file pipx moreutils procps unzip
-RUN         useradd -m -d /home/container -m container
+RUN         apt update
+RUN         apt install -y --no-install-recommends wget iproute2 gnupg2 software-properties-common libntlm0 winbind xvfb xauth libncurses5-dev:i386 libncurses6 dbus libgdiplus lib32gcc-s1
+RUN         apt install -y alsa-tools libpulse0 pulseaudio libpulse-dev libasound2 libao-common gnutls-bin gnupg locales numactl cabextract curl python3 python3-pip python3-setuptools tini file pipx python3-setuptools python3-yaml moreutils procps unzip
+RUN         useradd -d /home/container -m container
 
 ## Install packages used for debugging.
 RUN         apt install -y --no-install-recommends net-tools lsof nmap
@@ -58,10 +54,10 @@ RUN	        wget -q -O /usr/sbin/winetricks https://raw.githubusercontent.com/Wi
             && chmod +x /usr/sbin/winetricks
 
 ## install rcon
-WORKDIR     /tmp/
-RUN         curl -sSL -o /tmp/rcon.tar.gz https://github.com/gorcon/rcon-cli/releases/download/v0.10.3/rcon-0.10.3-amd64_linux.tar.gz
-RUN         tar xvf rcon.tar.gz
-RUN         mv rcon-0.10.3-amd64_linux/rcon /usr/local/bin/
+RUN         cd /tmp/ \
+            && curl -sSL https://github.com/gorcon/rcon-cli/releases/download/v0.10.3/rcon-0.10.3-amd64_linux.tar.gz > rcon.tar.gz \
+            && tar xvf rcon.tar.gz \
+            && mv rcon-0.10.3-amd64_linux/rcon /usr/local/bin/
 
 USER        container
 ENV         USER=container HOME=/home/container
