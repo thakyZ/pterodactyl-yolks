@@ -74,7 +74,7 @@ if [ -z "${AUTO_UPDATE}" ] || [ "${AUTO_UPDATE}" == "1" ]; then
 		if echo "${STEAMCMD_INSTALLDIR:-/home/container}" | grep -q "^/mnt/server"; then
 			STEAMCMD_INSTALLDIR=$(echo "${STEAMCMD_INSTALLDIR}" | sed -E 's;^/mnt/server;/home/container;')
 		fi
-		cmd="+force_install_dir ${STEAMCMD_INSTALLDIR} +login ${STEAM_LOGIN} +app_update ${SRCDS_APPID}"
+		cmd="${cmd} +force_install_dir ${STEAMCMD_INSTALLDIR} +login ${STEAM_LOGIN} +app_update ${SRCDS_APPID}"
         if [ -n "${SRCDS_BETAID}" ]; then
 			cmd="${cmd} -beta ${SRCDS_BETAID}"
         fi
